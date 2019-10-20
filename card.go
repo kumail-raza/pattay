@@ -66,14 +66,15 @@ func GetBiggestCard(cards []Card, house string) Card {
 	return cards[max]
 }
 
-func isSameCard(c1 Card, c2 Card) bool {
+//IsSameCard checks if the card is same
+func IsSameCard(c1 Card, c2 Card) bool {
 	return c1.House() == c2.House() && c1.Number() == c2.Number()
 }
 
 //FindCardInCards returns card and index. returns error if not found
 func FindCardInCards(card Card, cards []Card) (Card, int, error) {
 	for i, c := range cards {
-		if isSameCard(c, card) {
+		if IsSameCard(c, card) {
 			return card, i, nil
 		}
 	}

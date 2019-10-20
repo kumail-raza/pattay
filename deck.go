@@ -123,7 +123,7 @@ func (d *deck) IsCardPresent(c Card) bool {
 
 	for _, card := range cards {
 		go func(cardToCheck Card, cardInDeck Card) {
-			if isSameCard(cardToCheck, cardInDeck) {
+			if IsSameCard(cardToCheck, cardInDeck) {
 				found <- true
 				return
 			}
