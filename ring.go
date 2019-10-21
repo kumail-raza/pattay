@@ -7,7 +7,7 @@ import (
 type ring struct {
 	players       []RingPlayer
 	currentPlayer RingPlayer
-	sequence      map[string]string
+	sequence      map[string]RingPlayer
 }
 
 type ringPlayer struct {
@@ -49,13 +49,13 @@ func NewRing(players ...RingPlayer) (Ring, error) {
 	if len(players) != 4 {
 		return nil, fmt.Errorf("Ring must contain four players")
 	}
-	sequence := make(map[string]string)
+	sequence := make(map[string]RingPlayer)
 	for i := 0; i < len(players)-1; i++ {
 		p := players[i]
-		sequence[p.Name()] = players[i+1].Name()
+		sequence[p.Name()] = players[i+1]
 	}
 	lastPlayer := players[len(players)-1]
-	sequence[lastPlayer.Name()] = players[0].Name()
+	sequence[lastPlayer.Name()] = players[0]
 
 	r := &ring{
 		players:  players,
@@ -73,14 +73,10 @@ func (r *ring) Next() (RingPlayer, error) {
 	if r.currentPlayer == nil {
 		return nil, fmt.Errorf("configuration error, please call SetCurrentPlayer first")
 	}
-	name := r.currentPlayer.Name()
-	for _, p := range r.Players() {
-		if p.Name() == r.sequence[name] {
-			r.SetCurrentPlayer(p)
-			return p, nil
-		}
-	}
-	return nil, fmt.Errorf("player not found")
+	nextPlayer := r.sequence[r.currentPlayer.Name()]
+	r.SetCurrentPlayer(nextPlayer)
+	return nextPlayer, nil
+
 }
 
 func (r *ring) SetCurrentPlayer(p RingPlayer) {
